@@ -2,12 +2,15 @@
 #include <WifiConnector.h>
 #include <BuzzerManager.h>
 
-WifiConnector wifiConnector;
+#define AP_SSID "ESP8266_LuToTahSo"
+#define AP_PASSWORD "12345678"
+
+WifiConnector wifiConnector(AP_SSID, AP_PASSWORD);
 
 int speakerPin = D3;
 int buttonPin = D0;
-int greenLedPin = D1;
-int redLedPin = D2;
+int greenLedPin = D6;
+int redLedPin = D7;
 
 BuzzerManager buzzerManager(speakerPin, greenLedPin, redLedPin);
 

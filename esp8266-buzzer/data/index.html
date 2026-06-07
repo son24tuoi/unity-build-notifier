@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP8266 Config</title>
+</head>
+
+<body>
+    <h1>ESP8266 Wifi Config</h1>
+
+    <button onclick="scanWifi()">Scan Wifi</button>
+
+    <h3>Wifi List</h3>
+
+    <select id="ssidSelect">
+        <option value="">No Wifi</option>
+    </select>
+
+    <h3>Password</h3>
+
+    <input id="passwordInput" type="password" placeholder="Password">
+
+    <br><br>
+
+    <button onclick="saveWifi()">Save WiFi</button>
+
+    <p id="message"></p>
+
+    <script src="/app.js"></script>
+
+</body>
+
+</html>
