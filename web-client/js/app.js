@@ -29,9 +29,9 @@ function addLog(message) {
 
     const log = document.getElementById("log");
 
-    log.innerHTML += `[${now}] ${message}<br>`;
+    log.insertAdjacentHTML('afterbegin', `[${now}] ${message}<br>`);
 
-    log.scrollTop = log.scrollHeight;
+    log.scrollTop = 0;
 }
 
 function clearLog() {
