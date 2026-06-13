@@ -40,10 +40,18 @@ void WifiConnector::setupWebServer()
     server.on("/save", HTTP_POST, [this]()
               { this->handleSaveWifi(); });
 
+    server.on(
+        "/command",
+        HTTP_POST,
+        std::bind(
+            &WifiConnector::handleCommandApi,
+            this));
+
     server.onNotFound([this]()
                       {
                         if (!this->handleFileRead(server.uri()))
                         {
+                            server.sendHeader("Access-Control-Allow-Origin", "*");
                             server.send(404, "text/plain", "File Not Found");
                         } });
 
@@ -88,6 +96,7 @@ void WifiConnector::handleScanWifi()
 
     WiFi.scanDelete();
 
+    server.sendHeader("Access-Control-Allow-Origin", "*");
     server.send(200, "application/json", json);
 }
 
@@ -95,6 +104,7 @@ void WifiConnector::handleSaveWifi()
 {
     if (!server.hasArg("ssid") || !server.hasArg("password"))
     {
+        server.sendHeader("Access-Control-Allow-Origin", "*");
         server.send(
             400,
             "application/json",
@@ -113,6 +123,7 @@ void WifiConnector::handleSaveWifi()
 
     if (!connected)
     {
+        server.sendHeader("Access-Control-Allow-Origin", "*");
         server.send(
             400,
             "application/json",
@@ -122,10 +133,38 @@ void WifiConnector::handleSaveWifi()
 
     saveWifiConfig(ssid, password);
 
+    server.sendHeader("Access-Control-Allow-Origin", "*");
     server.send(
         200,
         "application/json",
         "{\"success\":true,\"message\":\"WiFi connection successful and configuration saved.\"}");
+}
+
+void WifiConnector::handleCommandApi()
+{
+    if (!server.hasArg("command"))
+    {
+        server.sendHeader("Access-Control-Allow-Origin", "*");
+        server.send(
+            400,
+            "text/plain",
+            "Missing command");
+
+        return;
+    }
+
+    String command = server.arg("command");
+
+    Serial.print("[HTTP] ");
+    Serial.println(command);
+
+    if (commandCallback)
+    {
+        commandCallback(command);
+    }
+
+    server.sendHeader("Access-Control-Allow-Origin", "*");
+    server.send(200, "text/plain", "OK");
 }
 
 bool WifiConnector::handleFileRead(String path)
@@ -356,4 +395,9 @@ String WifiConnector::getIp()
 WifiState WifiConnector::getState()
 {
     return state;
+}
+
+void WifiConnector::setCommandCallback(std::function<void(String)> callback)
+{
+    commandCallback = callback;
 }

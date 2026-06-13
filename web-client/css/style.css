@@ -1,0 +1,210 @@
+:root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --primary: #3b82f6;
+    --success: #22c55e;
+    --danger: #ef4444;
+    --text: #f8fafc;
+    --border: #334155;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Segoe UI, sans-serif;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    padding: 20px;
+    height: 100vh;
+}
+
+.container {
+    max-width: 1400px;
+    margin: auto;
+    height: calc(100vh - 100px);
+}
+
+h1 {
+    font-size: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    gap: 20px;
+    /* height: 100%; */
+}
+
+.left-panel,
+.right-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: #0f172a;
+    color: white;
+}
+
+button {
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: .2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+}
+
+.primary {
+    background: var(--primary);
+    color: white;
+}
+
+.success {
+    background: var(--success);
+    color: white;
+}
+
+.danger {
+    background: var(--danger);
+    color: white;
+}
+
+.action-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.grid {
+    display: grid;
+    gap: 12px;
+    margin-top: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.custom-row {
+    margin-top: 15px;
+}
+
+.custom-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.custom-buttons button {
+    flex: 1;
+}
+
+.status-box {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    background: #0f172a;
+    border: 1px solid var(--border);
+    font-weight: bold;
+}
+
+.log-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.log {
+    margin-top: 15px;
+    background: black;
+    color: #00ff00;
+    padding: 15px;
+    border-radius: 8px;
+    /* make log flexible within its card */
+    height: auto;
+    min-height: 120px;
+    overflow-y: auto;
+    font-family: Consolas, monospace;
+}
+
+/* Ensure the left column's main card (log) expands to fill available space */
+.left-panel>.card:first-child {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+}
+
+.left-panel .log {
+    /* let the log take remaining space inside the card */
+    flex: 1 1 auto;
+}
+
+#toast {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 350px;
+    text-align: center;
+    padding: 15px;
+    border-radius: 10px;
+    font-weight: bold;
+    display: none;
+    z-index: 9999;
+}
+
+.toast-success {
+    background: #15803d;
+    color: white;
+}
+
+.toast-error {
+    background: #b91c1c;
+    color: white;
+}
+
+.toast-info {
+    background: #1d4ed8;
+    color: white;
+}
+
+@media (max-width: 900px) {
+
+    .layout {
+        display: flex;
+        flex-direction: column-reverse;
+        /* height: auto;
+        min-height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden; */
+    }
+
+    .log {
+        height: 300px;
+    }
+
+    .custom-buttons {
+        flex-direction: column;
+    }
+}

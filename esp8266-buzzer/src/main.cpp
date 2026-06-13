@@ -19,6 +19,8 @@ OledDisplayManager oledDisplay;
 
 int buttonState = 0;
 
+void handleCommand(String command);
+
 void setup()
 {
   Serial.begin(9600);
@@ -30,14 +32,18 @@ void setup()
   pinMode(buttonPin, INPUT);
 
   wifiConnector.begin();
+  wifiConnector.setCommandCallback(handleCommand);
 
   buzzerManager.playStart();
 
   oledDisplay.showText("LuToTahSo");
 }
+
 void handleCommand(String command)
 {
   command.trim();
+  
+  Serial.println(command);
 
   int separatorIndex = command.indexOf('|');
 
@@ -90,10 +96,12 @@ void handleCommand(String command)
   }
   else if (code == "300")
   {
+    oledDisplay.showText(message);
     playSuccess = true;
   }
   else if (code == "301")
   {
+    oledDisplay.showText(message);
     playFailed = true;
   }
   else
