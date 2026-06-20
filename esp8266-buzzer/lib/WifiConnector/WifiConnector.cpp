@@ -47,6 +47,16 @@ void WifiConnector::setupWebServer()
             &WifiConnector::handleCommandApi,
             this));
 
+    server.on(
+        "/clear_data",
+        HTTP_POST,
+        [this]() { this->handleClearData(); });
+        
+    server.on(
+        "/restart",
+        HTTP_POST,
+        [this]() { this->handleRestart(); });
+
     server.onNotFound([this]()
                       {
                         if (!this->handleFileRead(server.uri()))
@@ -165,6 +175,46 @@ void WifiConnector::handleCommandApi()
 
     server.sendHeader("Access-Control-Allow-Origin", "*");
     server.send(200, "text/plain", "OK");
+}
+
+void WifiConnector::handleClearData()
+{
+    Serial.println("[WebServer] Clear data request");
+
+    bool removed = false;
+
+    if (LittleFS.exists("/wifi_config.txt"))
+    {
+        LittleFS.remove("/wifi_config.txt");
+        removed = true;
+        Serial.println("[LittleFS] wifi_config.txt removed");
+    }
+
+    // respond with JSON
+    server.sendHeader("Access-Control-Allow-Origin", "*");
+    if (removed)
+    {
+        server.send(200, "application/json", "{\"success\":true,\"message\":\"data cleared\"}");
+        delay(200);
+        Serial.println("[WebServer] Restarting to apply reset...");
+        ESP.restart();
+    }
+    else
+    {
+        server.send(200, "application/json", "{\"success\":false,\"message\":\"no data found\"}");
+    }
+}
+
+void WifiConnector::handleRestart()
+{
+    Serial.println("[WebServer] Restart request");
+
+    server.sendHeader("Access-Control-Allow-Origin", "*");
+    server.send(200, "application/json", "{\"success\":true,\"message\":\"restarting\"}");
+
+    delay(200);
+    Serial.println("[WebServer] Restarting now...");
+    ESP.restart();
 }
 
 bool WifiConnector::handleFileRead(String path)

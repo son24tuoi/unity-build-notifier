@@ -109,3 +109,43 @@ function saveWifi() {
 window.onload = function () {
     scanWifi();
 };
+
+function resetWifi() {
+    const message = document.getElementById("message");
+
+    if (!confirm("Reset WiFi settings and restart the device?")) {
+        return;
+    }
+
+    message.textContent = "Resetting WiFi...";
+
+    fetch("/clear_data", { method: "POST" })
+        .then(response => response.json())
+        .then(data => {
+            message.textContent = data.message || "Device will restart.";
+        })
+        .catch(error => {
+            message.textContent = "Error: " + error.message;
+            console.log(error);
+        });
+}
+
+function restartDevice() {
+    const message = document.getElementById("message");
+
+    if (!confirm("Restart the device now?")) {
+        return;
+    }
+
+    message.textContent = "Restarting device...";
+
+    fetch("/restart", { method: "POST" })
+        .then(response => response.json())
+        .then(data => {
+            message.textContent = data.message || "Restarting...";
+        })
+        .catch(error => {
+            message.textContent = "Error: " + error.message;
+            console.log(error);
+        });
+}

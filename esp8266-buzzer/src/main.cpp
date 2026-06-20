@@ -42,7 +42,7 @@ void setup()
 void handleCommand(String command)
 {
   command.trim();
-  
+
   Serial.println(command);
 
   int separatorIndex = command.indexOf('|');
@@ -83,6 +83,21 @@ void handleCommand(String command)
     oledDisplay.showWifiConnected(
         WiFi.SSID(),
         WiFi.localIP().toString());
+  }
+  else if (code == "104")
+  {
+    if (WiFi.status() == WL_CONNECTED)
+    {
+      oledDisplay.showWifiConnected(
+          WiFi.SSID(),
+          WiFi.localIP().toString());
+    }
+    else
+    {
+      oledDisplay.showConfigMode(
+          AP_SSID,
+          WiFi.softAPIP().toString());
+    }
   }
   else if (code == "200")
   {
@@ -140,6 +155,7 @@ void readButtonInput()
 
   if (buttonState == HIGH)
   {
+    handleCommand("104");
     buzzerManager.playStart();
   }
 }

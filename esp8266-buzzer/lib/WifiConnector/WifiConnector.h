@@ -35,6 +35,8 @@ private:
     void handleScanWifi();
     void handleSaveWifi();
     void handleCommandApi();
+    void handleClearData();
+    void handleRestart();
 
     bool handleFileRead(String path);
     String getContentType(String path);
